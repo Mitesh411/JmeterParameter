@@ -1,0 +1,36 @@
+name: Test JMeter on GitHub Action
+
+on:
+    workflow_dispatch:
+        inputs:
+            virtual_user:
+                required: true
+                description: Enter the virtual user count
+                default: '10'
+            ramp_up_time:
+                required: true
+                description: Enter the ramp up time in seconds
+                default: '10'
+            loop_count:
+                required: true
+                description: Enter the loop count
+                default: '1'      
+          
+jobs:
+  action_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the Code
+        uses: actions/checkout@v3
+
+      - name: Run JMeter Action on a test
+        uses: rbhadti94/apache-jmeter-action@v0.5.0
+        with:
+          testFilePath: RequestExamples.jmx
+          outputReportsFolder: reports/
+          args: "--loglevel INFO -Juser_count=${{ github.event.inputs.virtual_user }} -Jramp_up_time=${{ github.event.inputs.ramp_up_time }} -Jloop_count=${{ github.event.inputs.loop_count }} --jmeterlogconf=log.conf -JMyProperty=Value"
+
+      - uses: actions/upload-artifact@v3.1.2
+        with:
+          name: jmeter-test-results
+          path: reports/
