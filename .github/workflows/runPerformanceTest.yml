@@ -21,16 +21,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
 
       - name: Run JMeter Action on a test
-        uses: rbhadti94/apache-jmeter-action@v0.5.0
+        uses: rbhadti94/apache-jmeter-action@v0.7.0
         with:
           testFilePath: RequestExamples.jmx
           outputReportsFolder: reports/
           args: "--loglevel INFO -Juser_count=${{ github.event.inputs.virtual_user }} -Jramp_up_time=${{ github.event.inputs.ramp_up_time }} -Jloop_count=${{ github.event.inputs.loop_count }} --jmeterlogconf=log.conf -JMyProperty=Value"
 
-      - uses: actions/upload-artifact@v3.1.2
+      - uses: actions/upload-artifact@v4.3.1
+        if: always()
         with:
           name: jmeter-test-results
           path: reports/
+
+      - name: Publish to Github Pages
+        uses: peaceiris/actions-gh-pages@v3.9.3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ github.workspace }}/reports/     
