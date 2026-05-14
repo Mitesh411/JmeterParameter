@@ -9,13 +9,14 @@ This document outlines the configuration and structure of the JMeter Test Plan (
 graph TD
     A[JMeter Test Plan] --> B[Thread Group]
     B --> C{API Requests}
-    C -->|GET| D[/products/1]
-    C -->|GET| E[/products/search?q=iphone]
-    C -->|POST| F[/products/add]
-    C -->|PUT| G[/products/1]
-    C -->|DELETE| H[/products/1]
 
-    D --> I[dummyjson.com]
+    C -->|GET| D["/products/1"]
+    C -->|GET| E["/products/search?q=iphone"]
+    C -->|POST| F["/products/add"]
+    C -->|PUT| G["/products/1 (update)"]
+    C -->|DELETE| H["/products/1 (delete)"]
+
+    D --> I["dummyjson.com"]
     E --> I
     F --> I
     G --> I
